@@ -1,5 +1,3 @@
-
-
 "use client"
 
 import type React from "react"
@@ -8,14 +6,13 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Box, FileJson, Cpu } from "lucide-react" 
-import { useRouter } from "next/navigation"
+import { Box, FileJson, Cpu } from "lucide-react"
+
 interface EditImageFormProps {
   id: string
 }
 
 export default function EditImageForm({ id }: EditImageFormProps) {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -59,27 +56,20 @@ export default function EditImageForm({ id }: EditImageFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 p-6 bg-gray-50 rounded-lg">
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-700">
-          <Box className="mr-2 h-5 w-5 text-blue-500" /> Basic Information
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Box className="mr-2" /> Basic Information
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="name" className="block mb-1">
               Name
             </label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full rounded-lg "
-              required
-            />
+            <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
           <div>
-            <label htmlFor="docker_image" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="docker_image" className="block mb-1">
               Docker Image
             </label>
             <Input
@@ -87,24 +77,17 @@ export default function EditImageForm({ id }: EditImageFormProps) {
               name="docker_image"
               value={formData.docker_image}
               onChange={handleChange}
-              className="w-full"
               required
             />
           </div>
           <div>
-            <label htmlFor="version" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="version" className="block mb-1">
               Version
             </label>
-            <Input
-              id="version"
-              name="version"
-              value={formData.version}
-              onChange={handleChange}
-              className="w-full"
-            />
+            <Input id="version" name="version" value={formData.version} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="tags" className="block mb-1">
               Tags (comma-separated)
             </label>
             <Input
@@ -114,32 +97,24 @@ export default function EditImageForm({ id }: EditImageFormProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, tags: e.target.value.split(",").map((tag) => tag.trim()) }))
               }
-              className="w-full"
             />
           </div>
         </div>
-        <div className="mt-6">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="mt-4">
+          <label htmlFor="description" className="block mb-1">
             Description
           </label>
-          <Textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={3}
-            className="w-full"
-          />
+          <Textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={3} />
         </div>
       </section>
 
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-700">
-          <FileJson className="mr-2 h-5 w-5 text-green-500" /> Schemas
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <FileJson className="mr-2" /> Schemas
         </h2>
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div>
-            <label htmlFor="input_schema" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="input_schema" className="block mb-1">
               Input Schema (JSON)
             </label>
             <Textarea
@@ -148,11 +123,10 @@ export default function EditImageForm({ id }: EditImageFormProps) {
               value={JSON.stringify(formData.input_schema, null, 2)}
               onChange={(e) => setFormData((prev) => ({ ...prev, input_schema: JSON.parse(e.target.value) }))}
               rows={5}
-              className="w-full font-mono text-sm"
             />
           </div>
           <div>
-            <label htmlFor="output_schema" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="output_schema" className="block mb-1">
               Output Schema (JSON)
             </label>
             <Textarea
@@ -161,18 +135,17 @@ export default function EditImageForm({ id }: EditImageFormProps) {
               value={JSON.stringify(formData.output_schema, null, 2)}
               onChange={(e) => setFormData((prev) => ({ ...prev, output_schema: JSON.parse(e.target.value) }))}
               rows={5}
-              className="w-full font-mono text-sm"
             />
           </div>
         </div>
       </section>
 
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-700">
-          <Cpu className="mr-2 h-5 w-5 text-purple-500" /> Execution Requirements
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Cpu className="mr-2" /> Execution Requirements
         </h2>
         <div>
-          <label htmlFor="execution_requirements" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="execution_requirements" className="block mb-1">
             Execution Requirements (JSON)
           </label>
           <Textarea
@@ -181,23 +154,17 @@ export default function EditImageForm({ id }: EditImageFormProps) {
             value={JSON.stringify(formData.execution_requirements, null, 2)}
             onChange={(e) => setFormData((prev) => ({ ...prev, execution_requirements: JSON.parse(e.target.value) }))}
             rows={5}
-            className="w-full font-mono text-sm"
           />
         </div>
       </section>
 
       <div className="flex justify-end space-x-4">
-      <Button
-          type="button"
-          onClick={() => router.back()} 
-          className="bg-gray-500 hover:bg-gray-600 text-white"
-        >
+        <Button type="button" variant="outline">
           Cancel
         </Button>
-        <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-          Save Changes
-        </Button>
+        <Button type="submit">Save Changes</Button>
       </div>
     </form>
   )
 }
+

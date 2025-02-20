@@ -1,7 +1,7 @@
-
 "use client"
 
 import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,51 +20,15 @@ export default function AddImageForm() {
     execution_requirements: "",
   })
   const [isValidated, setIsValidated] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    // Clear errors when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
-    }
   }
 
   const handleValidate = () => {
-    const newErrors: Record<string, string> = {}
-
-    // Basic validation
-    if (!formData.name.trim()) newErrors.name = "Name is required"
-    if (!formData.docker_image.trim()) newErrors.docker_image = "Docker Image is required"
-    if (!formData.version.trim()) newErrors.version = "Version is required"
-
-    // JSON validation for schemas and requirements
-    try {
-      if (formData.input_schema) JSON.parse(formData.input_schema)
-    } catch (e) {
-      newErrors.input_schema = "Invalid JSON format"
-    }
-
-    try {
-      if (formData.output_schema) JSON.parse(formData.output_schema)
-    } catch (e) {
-      newErrors.output_schema = "Invalid JSON format"
-    }
-
-    try {
-      if (formData.execution_requirements) JSON.parse(formData.execution_requirements)
-    } catch (e) {
-      newErrors.execution_requirements = "Invalid JSON format"
-    }
-
-    setErrors(newErrors)
-
-    if (Object.keys(newErrors).length === 0) {
-      setIsValidated(true)
-    } else {
-      setIsValidated(false)
-    }
+    // Client-side validation logic here
+    setIsValidated(true)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -77,28 +41,19 @@ export default function AddImageForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Basic Information Section */}
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md border border-gray-100">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-800">
-          <Box className="mr-2 h-5 w-5 text-blue-500" /> Basic Information
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Box className="mr-2" /> Basic Information
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="name" className="block mb-1">
               Name
             </label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full"
-              required
-            />
-            {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
+            <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
           <div>
-            <label htmlFor="docker_image" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="docker_image" className="block mb-1">
               Docker Image
             </label>
             <Input
@@ -106,60 +61,37 @@ export default function AddImageForm() {
               name="docker_image"
               value={formData.docker_image}
               onChange={handleChange}
-              className="w-full"
               required
             />
-            {errors.docker_image && <p className="text-sm text-red-500 mt-1">{errors.docker_image}</p>}
           </div>
           <div>
-            <label htmlFor="version" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="version" className="block mb-1">
               Version
             </label>
-            <Input
-              id="version"
-              name="version"
-              value={formData.version}
-              onChange={handleChange}
-              className="w-full"
-            />
-            {errors.version && <p className="text-sm text-red-500 mt-1">{errors.version}</p>}
+            <Input id="version" name="version" value={formData.version} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="tags" className="block mb-1">
               Tags (comma-separated)
             </label>
-            <Input
-              id="tags"
-              name="tags"
-              value={formData.tags}
-              onChange={handleChange}
-              className="w-full"
-            />
+            <Input id="tags" name="tags" value={formData.tags} onChange={handleChange} />
           </div>
         </div>
-        <div className="mt-6">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="mt-4">
+          <label htmlFor="description" className="block mb-1">
             Description
           </label>
-          <Textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={3}
-            className="w-full"
-          />
+          <Textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={3} />
         </div>
       </section>
 
-      {/* Schemas Section */}
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md border border-gray-100">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-800">
-          <FileJson className="mr-2 h-5 w-5 text-green-500" /> Schemas
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <FileJson className="mr-2" /> Schemas
         </h2>
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div>
-            <label htmlFor="input_schema" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="input_schema" className="block mb-1">
               Input Schema (JSON)
             </label>
             <Textarea
@@ -168,12 +100,10 @@ export default function AddImageForm() {
               value={formData.input_schema}
               onChange={handleChange}
               rows={5}
-              className="w-full font-mono text-sm"
             />
-            {errors.input_schema && <p className="text-sm text-red-500 mt-1">{errors.input_schema}</p>}
           </div>
           <div>
-            <label htmlFor="output_schema" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="output_schema" className="block mb-1">
               Output Schema (JSON)
             </label>
             <Textarea
@@ -182,20 +112,17 @@ export default function AddImageForm() {
               value={formData.output_schema}
               onChange={handleChange}
               rows={5}
-              className="w-full font-mono text-sm"
             />
-            {errors.output_schema && <p className="text-sm text-red-500 mt-1">{errors.output_schema}</p>}
           </div>
         </div>
       </section>
 
-      {/* Execution Requirements Section */}
-      <section className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md border border-gray-100">
-        <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-800">
-          <Cpu className="mr-2 h-5 w-5 text-purple-500" /> Execution Requirements
+      <section className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Cpu className="mr-2" /> Execution Requirements
         </h2>
         <div>
-          <label htmlFor="execution_requirements" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="execution_requirements" className="block mb-1">
             Execution Requirements (JSON)
           </label>
           <Textarea
@@ -204,23 +131,19 @@ export default function AddImageForm() {
             value={formData.execution_requirements}
             onChange={handleChange}
             rows={5}
-            className="w-full font-mono text-sm"
           />
-          {errors.execution_requirements && (
-            <p className="text-sm text-red-500 mt-1">{errors.execution_requirements}</p>
-          )}
         </div>
       </section>
 
-      {/* Buttons */}
       <div className="flex justify-end space-x-4">
-        <Button type="button" onClick={handleValidate} className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button type="button" onClick={handleValidate}>
           Validate
         </Button>
-        <Button type="submit" disabled={!isValidated} className="bg-green-600 hover:bg-green-700 text-white">
+        <Button type="submit" disabled={!isValidated}>
           Submit
         </Button>
       </div>
     </form>
   )
 }
+

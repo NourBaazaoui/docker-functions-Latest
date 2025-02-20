@@ -1,67 +1,65 @@
-
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Pencil, Trash2 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Pencil } from "lucide-react"
+import DeleteButton from "./DeleteButton"
+import { getTaxonomyById } from "@/lib/taxonomy-data"
+import type { ImageType } from "@/lib/types"
 
 interface ImageCardProps {
-  image: {
-    id: number
-    name: string
-    description: string
-    docker_image: string
-    version: string
-    tags: string[]
-  }
+  image: ImageType
 }
 
 export default function ImageCard({ image }: ImageCardProps) {
   return (
-    <div className="bg-white shadow-sm rounded-lg p-6 transition-all hover:shadow-md border border-gray-100">
-      <h2 className="text-xl font-semibold text-gray-800 mb-3">{image.name}</h2>
-      <p className="text-sm text-gray-600 mb-4">{image.description}</p>
-      <div className="space-y-2 mb-4">
-        <p className="text-sm text-gray-700">
-          <strong className="font-medium">Docker Image:</strong> {image.docker_image}
-        </p>
-        <p className="text-sm text-gray-700">
-          <strong className="font-medium">Version:</strong> {image.version}
-        </p>
-      </div>
-      <div className="flex flex-wrap gap-2 mb-6">
+    <div className="bg-white shadow-md rounded-lg p-6">
+      <h2 className="text-xl font-semibold mb-2">{image.name}</h2>
+      <p className="text-gray-600 mb-2">{image.description}</p>
+      <p className="mb-2">
+        <strong>Docker Image:</strong> {image.docker_image}
+      </p>
+      <p className="mb-2">
+        <strong>Version:</strong> {image.version}
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4">
         {image.tags.map((tag, index) => (
-          <span
-            key={index}
-            className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium"
-          >
+          <span key={index} className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm">
             {tag}
           </span>
         ))}
       </div>
-      <div className="flex justify-between items-center">
+      <div className="mb-4">
+        <div className="text-sm font-medium mb-1">Categories:</div>
+        <div className="flex flex-wrap gap-2">
+          {image.taxonomies.map((taxId) => {
+            const taxonomy = getTaxonomyById(taxId)
+            if (!taxonomy) return null
+            return (
+              <Badge
+                key={taxId}
+                variant="secondary"
+                className={`${taxonomy.color ? `bg-${taxonomy.color}-100 text-${taxonomy.color}-800` : ""}`}
+              >
+                {taxonomy.name}
+              </Badge>
+            )
+          })}
+        </div>
+      </div>
+      <div className="flex justify-between">
         <Link href={`/image/${image.id}`}>
-          <Button variant="outline" className="hover:bg-gray-100">
-            View Details
-          </Button>
+          <Button variant="outline">View Details</Button>
         </Link>
-        <div className="flex space-x-2">
+        <div className="space-x-2">
           <Link href={`/edit-image/${image.id}`}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-            >
+            <Button variant="outline" size="icon">
               <Pencil className="h-4 w-4" />
             </Button>
           </Link>
-          <Button
-            variant="destructive"
-            size="icon"
-            className="hover:bg-red-50 hover:text-red-700 rounded-lg"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <DeleteButton imageId={image.id} imageName={image.name} />
         </div>
       </div>
     </div>
   )
 }
+

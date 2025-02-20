@@ -1,44 +1,57 @@
+import ImageListContainer from "@/components/ImageListContainer"
+import type { ImageType } from "@/lib/types"
 
-
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import ImageCard from "@/components/ImageCard"
-
-const dummyData = [
+// Move this to a separate file in a real application
+const dummyData: ImageType[] = [
   {
     id: 1,
-    name: "Sample Image 1",
-    description: "This is a sample Docker image",
-    docker_image: "sample/image1:latest",
+    name: "TensorFlow Training",
+    description: "TensorFlow training environment with GPU support",
+    docker_image: "tensorflow/tensorflow:latest-gpu",
     version: "1.0.0",
-    tags: ["sample", "test"],
+    tags: ["ml", "gpu", "training"],
+    taxonomies: ["ml", "ml-training"],
+    input_schema: { type: "object", properties: { input: { type: "string" } } },
+    output_schema: { type: "object", properties: { output: { type: "string" } } },
+    execution_requirements: { cpu: "1", memory: "512Mi" },
+    created_at: "2025-02-19T13:04:33.000Z",
+    updated_at: "2025-02-19T13:04:33.000Z",
   },
   {
     id: 2,
-    name: "Sample Image 2",
-    description: "Another sample Docker image",
-    docker_image: "sample/image2:latest",
+    name: "FastAPI Backend",
+    description: "Python FastAPI backend service",
+    docker_image: "fastapi/backend:latest",
     version: "2.1.0",
-    tags: ["sample", "production"],
+    tags: ["python", "api", "backend"],
+    taxonomies: ["web", "web-backend"],
+    input_schema: { type: "object", properties: { input: { type: "string" } } },
+    output_schema: { type: "object", properties: { output: { type: "string" } } },
+    execution_requirements: { cpu: "1", memory: "512Mi" },
+    created_at: "2025-02-19T13:04:33.000Z",
+    updated_at: "2025-02-19T13:04:33.000Z",
+  },
+  {
+    id: 3,
+    name: "PostgreSQL Database",
+    description: "PostgreSQL database with custom extensions",
+    docker_image: "postgres:latest",
+    version: "1.2.0",
+    tags: ["database", "postgres"],
+    taxonomies: ["db"],
+    input_schema: { type: "object", properties: { input: { type: "string" } } },
+    output_schema: { type: "object", properties: { output: { type: "string" } } },
+    execution_requirements: { cpu: "1", memory: "512Mi" },
+    created_at: "2025-02-19T13:04:33.000Z",
+    updated_at: "2025-02-19T13:04:33.000Z",
   },
 ]
 
 export default function ListPage() {
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
-      <div className="flex justify-between items-center mb-8 ">
-        <h1 className="text-3xl font-bold text-gray-800">Docker Images</h1>
-        <Link href="/add-image">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-            Add New Image
-          </Button>
-        </Link>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dummyData.map((image) => (
-          <ImageCard key={image.id} image={image} />
-        ))}
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <ImageListContainer images={dummyData} />
     </div>
   )
 }
+
